@@ -9,7 +9,7 @@ const routes = require('./routes')
 const app = express();
 
 
-app.use(cors({ credentials: true, origin: ['http://localhost:3000'] }));
+app.use(cors({ credentials: true, origin: ['http://localhost:1234'] }));
 
 app.get('/hello', routes.hello)
 

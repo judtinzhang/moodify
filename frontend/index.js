@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
-import App from './App'
+import App from './src/App'
 
 import 'antd/dist/antd.css';
 
