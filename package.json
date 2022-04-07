@@ -7,9 +7,10 @@
     "doc": "docs"
   },
   "scripts": {
-    "start": "nodemon backend/server.js",
-    "build": "parcel frontend/index.html",
-    "dev": "concurrently \"npm run build\" \"npm run start\""
+    "start": "node backend/server.js",
+    "build": "parcel watch frontend/index.html",
+    "parcel": "parcel frontend/index.html",
+    "dev": "concurrently \"npm run parcel\" \"npm run start\""
   },
   "repository": {
     "type": "git",
