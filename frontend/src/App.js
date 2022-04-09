@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 
 import { getMessage } from './fetcher'
+import Home from './components/Home'
 
 const App = () => {
 
@@ -14,8 +15,9 @@ const App = () => {
 
     return (
         <div>
-            { req() }
-            { hello }
+            {/* { req() }
+            { hello } */}
+            <Home />
         </div>
     )
 }

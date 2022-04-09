@@ -10,3 +10,36 @@ const getMessage = async () => {
 export {
     getMessage
 }
+
+/*
+synonyms
+{
+    "body": "hetvi suks",
+    "synonym": false,
+    "sentiment": "hello"
+}
+
+emotions
+{
+    "body": "hetvi suks",
+    "positive": false
+}
+
+language
+{
+    "body": "hetvi suks",
+    "language": "english"
+}
+
+sentiment
+{
+    "body": "hetvi suks",
+    "sentiment": false
+}
+
+emotion
+{
+    "body": "hetvi suks",
+    "emotion": false
+}
+*/

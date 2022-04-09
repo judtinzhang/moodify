@@ -9,7 +9,7 @@ import 'antd/dist/antd.css';
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
-      <Route path="/hello" render={() => <App />} />
+      <Route path="/" render={() => <App />} />
     </Switch>
   </BrowserRouter>,
   document.getElementById('root')

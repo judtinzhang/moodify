@@ -1,0 +1,89 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+}
+
+#body {
+    /* background: linear-gradient(45deg, #dbdaff, #5337df); */
+    position: relative; 
+    min-height: 100vh;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#body::before {
+    content: "";
+    background-image: url(https://media.istockphoto.com/vectors/cute-cow-vector-icon-illustration-vector-id1256233718?k=20&m=1256233718&s=612x612&w=0&h=rV_p3yC67ixJx89ByQ0CBmBwMu9wDF1ni-wKKRGH0wM=);
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: 0.75;
+    background-repeat: 2px/2px repeat;
+    background-size: 150px;
+    /* background-repeat: no-repeat;
+    background-position: bottom right; */
+    /* opacity: 0.5; */
+}
+
+section {
+    width: 90%;
+    /* margin: 2.5rem auto; */
+    margin: 0 auto;
+    max-width: 800px;
+    text-align: center;
+    font-size: 1.25rem;
+}
+
+h1 {
+    font-size: 3rem;
+    line-height: 120%;
+    margin-bottom: 2rem;
+    background-color: #EFEFEF;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+}
+
+textarea,
+input {
+    font-size: 1.25rem;
+}
+
+textarea {
+    width: 100%;
+    height: 40vh;
+    line-height: 150%;
+    outline: none;
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    resize: vertical;
+    transition: 0.15s;
+}
+
+textarea:focus {
+    box-shadow: 0 0 7.5px rgba(0, 0, 0, 0.2);
+}
+
+input {
+    padding: 0.75rem;
+    line-height: 100%;
+    border-radius: 0.75rem;
+    margin: 1rem 0 1.5rem;
+    width: 100%;
+    outline: none;
+    color: #fff;
+    /* text-transform: uppercase; */
+    border: none;
+    transition: 0.15s;
+  }
+
+input:hover {
+    background: #d0d0d3;
+}
