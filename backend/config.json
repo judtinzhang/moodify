@@ -1,9 +1,9 @@
 {
-    "rds_host": "hw1db.c5m8y3awaqlu.us-east-1.rds.amazonaws.com",
+    "rds_host": "moodifydb.caokyrf1bxav.us-east-1.rds.amazonaws.com",
     "rds_port": "3306",
-    "rds_user": "judtinzhang",
-    "rds_password" : "HetviJasonJustinSara!",
-    "rds_db": "FIFA",
+    "rds_user": "moo1234",
+    "rds_password" : "Moo!Moo!Moo!",
+    "rds_db": "moodifydb",
     "server_host": "127.0.0.1",
-    "server_port":"8080"
+    "server_port":"3306"
 }
