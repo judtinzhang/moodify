@@ -65,7 +65,20 @@ router.post('/emotion', async (req, res, next) => {
 })
 
 router.get('/sentiments', async (req, res, next) => {
-    res.send({ sentiments: ["hello", "list"] })
+    const sentiments = [
+        'positive',
+        'negative',
+        'anger',
+        'anticipation',
+        'disgust',
+        'fear',
+        'joy',
+        'sadness',
+        'surprise',
+        'trust',
+        'word'
+    ]
+    res.send({ sentiments })
 })
 
 module.exports = router
