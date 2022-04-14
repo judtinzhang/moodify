@@ -2,8 +2,8 @@
     "rds_host": "moodifydb.caokyrf1bxav.us-east-1.rds.amazonaws.com",
     "rds_port": "3306",
     "rds_user": "moo1234",
-    "rds_password" : "Moo!Moo!Moo!",
-    "rds_db": "moodifydb",
+    "rds_password": "Moo!Moo!Moo!",
+    "rds_db": "MOODIFY",
     "server_host": "127.0.0.1",
-    "server_port":"8080"
+    "server_port": "8080"
 }

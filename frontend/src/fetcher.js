@@ -7,8 +7,25 @@ const getMessage = async () => {
     return res.json()
 }
 
+const getSynonyms = async (data) => {
+    console.log(data)
+    const res = await fetch(`http://${config.server_host}:${config.server_port}/api/synonyms`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ body: data })
+    })
+    // console.log(await res.json())
+    const resp = await res.json()
+    // console.log(resp)
+    return resp
+}
+
 export {
-    getMessage
+    getMessage,
+    getSynonyms
 }
 
 /*

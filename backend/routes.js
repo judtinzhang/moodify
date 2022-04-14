@@ -1,14 +1,25 @@
 const config = require('./config.json')
 const express = require('express');
+const mysql = require('mysql');
 
 const router = express.Router()
 
-const processWords = (body, queryFunc) => {
+const connection = mysql.createConnection({
+    host: config.rds_host,
+    user: config.rds_user,
+    password: config.rds_password,
+    port: config.rds_port,
+    database: config.rds_db
+});
+connection.connect();
+
+const processWords = async (body, queryFunc, query) => {
     // initial values 
     let curr_word = ''
     let started = false
     let start_idx = -1
 
+    let newBody = ''
     for (let i = 0; i < body.length; i++) {
         if ((/[a-zA-Z]/).test(body[i])) {
             if (!started) {
@@ -22,30 +33,62 @@ const processWords = (body, queryFunc) => {
             // if current word is not empty and current index
             // is not a letter, then update current word
             if (curr_word !== '') {
-                body = body.substring(0, start_idx) + queryFunc(curr_word) + body.substring(i)
-                // index and word
+                // append modified word to new body
+                const newWord = await queryFunc({ query, word: curr_word.toLowerCase() })
+                newBody += newWord
                 started = false
             }
+            newBody += body[i]
             // reset word
             curr_word = ''
         }
     }
-    return body
+
+    // account for case where no punctuation at the end
+    if ((/[a-zA-Z]/).test(body[body.length - 1])) {
+        return newBody + await queryFunc({ query, word: curr_word.toLowerCase() })
+    } else {
+        return newBody
+    }
 }
-
-const reverse = (word) => word.split('').reverse().join('')
-
-const upper = (word) => word.toUpperCase()
+const queryFunc = async ({ query, word }) => {
+    let p = new Promise(function (res, rej) {
+        connection.query(query(word), function (err, results) {
+            if (err) rej(err)
+            else {
+                const randomNumber = Math.floor(Math.random() * results.length)
+                // console.log(results[randomNumber])
+                if (results[randomNumber] === undefined) {
+                    res(word)
+                } else {
+                    res(results[randomNumber]['Word2'])
+                }
+            }
+        });
+    });
+    return p
+}
 
 router.post('/synonyms', async (req, res, next) => {
     let { body, synonym, sentiment } = req.body
-    // process words
-    body = processWords(body, upper)
-    res.send({ body })
+    const query = (word) => `
+    (SELECT s.Word2 FROM Words w
+    JOIN Synonyms s
+    ON w.Word = s.Word1
+    WHERE w.Word = '${word}')
+    UNION
+    SELECT s.Word1
+    FROM Words w
+    JOIN Synonyms s
+    ON w.Word = s.Word2
+    WHERE w.Word = '${word}';`
+    console.log(await processWords(body, queryFunc, query))
+    res.send({ body: await processWords(body, queryFunc, query) })
 })
 
 router.post('/emotions', async (req, res, next) => {
     const { body, positive } = req.body
+
     res.send({ body })
 })
 
@@ -61,6 +104,12 @@ router.post('/sentiment', async (req, res, next) => {
 
 router.post('/emotion', async (req, res, next) => {
     const { body, emotion } = req.body
+    connection.query(`SELECT COUNT(*) FROM Synonyms`, function (err, results) {
+        console.log(results)
+    });
+
+
+
     res.send({ emotion: 0.58 })
 })
 

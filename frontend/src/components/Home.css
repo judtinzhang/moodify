@@ -8,7 +8,7 @@
 
 #body {
     /* background: linear-gradient(45deg, #dbdaff, #5337df); */
-    position: relative; 
+    position: relative;
     min-height: 100vh;
     height: 100vh;
     width: 100%;
@@ -26,11 +26,8 @@
     bottom: 0px;
     left: 0px;
     opacity: 0.75;
-    background-repeat: 2px/2px repeat;
+    /* background-repeat: 2px/2px repeat; */
     background-size: 150px;
-    /* background-repeat: no-repeat;
-    background-position: bottom right; */
-    /* opacity: 0.5; */
 }
 
 section {
@@ -82,8 +79,9 @@ input {
     /* text-transform: uppercase; */
     border: none;
     transition: 0.15s;
-  }
+}
 
 input:hover {
     background: #d0d0d3;
+    cursor: pointer;
 }
