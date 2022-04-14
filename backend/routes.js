@@ -71,7 +71,8 @@ const queryFunc = async ({ query, word }) => {
 
 router.post('/synonyms', async (req, res, next) => {
     let { body, synonym, sentiment } = req.body
-    const query = (word) => `
+
+    const basicQuery = (word) => `
     (SELECT s.Word2 FROM Words w
     JOIN Synonyms s
     ON w.Word = s.Word1
@@ -82,7 +83,24 @@ router.post('/synonyms', async (req, res, next) => {
     JOIN Synonyms s
     ON w.Word = s.Word2
     WHERE w.Word = '${word}';`
-    console.log(await processWords(body, queryFunc, query))
+
+    const emotionQuery = (word) => `
+    (SELECT s.Word2
+    FROM Words w
+    JOIN Synonyms s
+    ON w.Word = s.Word1
+    WHERE w.Word = '${word}'
+    AND w.${sentiment} = 1)
+    UNION
+    SELECT s.Word1
+    FROM Words w
+    JOIN Synonyms s
+    ON w.Word = s.Word2
+    WHERE w.Word = '${word}'
+    AND w.${sentiment} = 1;`
+
+    const query = sentiment === 'none' ? basicQuery : emotionQuery
+
     res.send({ body: await processWords(body, queryFunc, query) })
 })
 
@@ -115,6 +133,7 @@ router.post('/emotion', async (req, res, next) => {
 
 router.get('/sentiments', async (req, res, next) => {
     const sentiments = [
+        'none',
         'positive',
         'negative',
         'anger',
@@ -124,8 +143,7 @@ router.get('/sentiments', async (req, res, next) => {
         'joy',
         'sadness',
         'surprise',
-        'trust',
-        'word'
+        'trust'
     ]
     res.send({ sentiments })
 })

@@ -5,10 +5,10 @@ const Results = (props) => {
     const text = props.history.location.state.body
     return (
         <div id='results-body'>
-            <section>
+            <div id='section'>
                 <h1 id='results-header'>Here's the milk 🐮</h1>
                 {text}
-            </section>
+            </div>
         </div>
     )
 }

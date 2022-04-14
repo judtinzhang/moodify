@@ -15,7 +15,7 @@ const getSynonyms = async (data) => {
             'Accept': 'application/json, text/plain, */*',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ body: data })
+        body: JSON.stringify({ body: data, sentiment: "sadness" })
     })
     // console.log(await res.json())
     const resp = await res.json()
