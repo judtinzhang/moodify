@@ -7,7 +7,7 @@ This project will translate the user's text in the following ways:
   - positive, negative
 - languages: converts text to a specified language (103 possible languages to choose from)
 - poetify: converts text in a way to capture the feeling of a sentence with no concern for meaning 😇
-  - replaces every word with another word of the same sentiment and meotion
+  - replaces every word with another word of the same sentiment and emotion
 
 We will also display statistics regarding how positive and negative the OG text is.
 
