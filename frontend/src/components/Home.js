@@ -9,9 +9,8 @@ const Home = () => {
     let history = useHistory();
 
     async function handleSubmit() {
-        getSynonyms(text).then(res => {
-            // console.log(res)
-            history.push({ pathname: '/results', state: res })
+        getSynonyms(text, "default").then(res => {
+            history.push({ pathname: '/results', state: {res: res, ogText: text} })
         })
     }
 
@@ -20,7 +19,7 @@ const Home = () => {
             <section>
                 <h1>MOO-dify</h1>
                 <textarea id="input-field" placeholder={text} onChange={event => setText(event.target.value)}></textarea>
-                <input id="submit-button" type="button" value="COWculate" onClick={() => handleSubmit()} />
+                <input className="submit-button" type="button" value="COWculate" onClick={() => handleSubmit()} />
             </section>
         </div>
 

@@ -75,8 +75,6 @@ input {
     margin: 1rem 0 1.5rem;
     width: 100%;
     outline: none;
-    color: #fff;
-    /* text-transform: uppercase; */
     border: none;
     transition: 0.15s;
 }

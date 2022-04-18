@@ -7,25 +7,58 @@ const getMessage = async () => {
     return res.json()
 }
 
-const getSynonyms = async (data) => {
-    console.log(data)
+const getSynonyms = async (data, option) => {
     const res = await fetch(`http://${config.server_host}:${config.server_port}/api/synonyms`, {
         method: 'POST',
         headers: {
             'Accept': 'application/json, text/plain, */*',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ body: data, sentiment: "sadness" })
+        body: JSON.stringify({ body: data, sentiment: option })
     })
-    // console.log(await res.json())
     const resp = await res.json()
-    // console.log(resp)
+    return resp
+}
+
+const getOptions = async () => {
+    const res = await fetch(`http://${config.server_host}:${config.server_port}/api/options`, {
+        method: 'GET',
+    })
+    return res.json()
+}
+
+const removeEmotion = async (data, emotion) => {
+    const res = await fetch(`http://${config.server_host}:${config.server_port}/api/remove/emotion`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ body: data, emotion: emotion })
+    })
+    const resp = await res.json()
+    return resp
+}
+
+const getStatistics = async (data) => {
+    const res = await fetch(`http://${config.server_host}:${config.server_port}/api/emotions/statistics`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ body: data })
+    })
+    const resp = await res.json()
     return resp
 }
 
 export {
     getMessage,
-    getSynonyms
+    getSynonyms,
+    getOptions,
+    removeEmotion,
+    getStatistics
 }
 
 /*
