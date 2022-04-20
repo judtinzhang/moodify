@@ -32,11 +32,12 @@
 
 #poetify {
     text-align: center;
-    max-width: 300px;
-    margin: auto;
-    display: block;
-    margin-top: 2rem;
+    max-width: 200px;
+    /* margin: auto; */
+    /* display: block; */
+    /* margin-top: 2rem; */
     background-color: rgba(239, 211, 193, 0.615);
+    padding: 0;
 }
 
 #poetify:hover {
