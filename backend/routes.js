@@ -358,7 +358,7 @@ const processAverage = async (body, averageQuery, query) => {
 //              START API ROUTES              //
 ////////////////////////////////////////////////
 
-router.post('/synonyms', async (req, res, next) => {
+router.post('/synonyms', async function getSynonyms(req, res, next) {
     let { body, sentiment } = req.body
 
     // returns synonym word correlated to sentiment
@@ -396,7 +396,7 @@ router.post('/synonyms', async (req, res, next) => {
     res.send({ body: await processWords(body, queryFunc, query) })
 })
 
-router.post('/language/synonyms', async (req, res, next) => {
+router.post('/language/synonyms', async function postLanguages(req, res, next) {
     let { body, language, sentiment } = req.body
 
     // returns synonym word in different language
@@ -459,7 +459,7 @@ router.post('/language/synonyms', async (req, res, next) => {
     res.send({ body: await processLanguage(language, body, languageQuery, query), english: newBody })
 })
 
-router.post('/remove/emotion', async(req, res, next) => {
+router.post('/remove/emotion', async function removeEmotion(req, res, next) {
     let { body, emotion } = req.body
 
     // returns body that disembodies emotion2
@@ -482,7 +482,7 @@ router.post('/remove/emotion', async(req, res, next) => {
     res.send({ body: await processWords(body, queryFunc, query) })
 })
 
-router.post('/emotions/statistics', async (req, res, next) => {
+router.post('/emotions/statistics', async function getStatistics(req, res, next) {
     let { body } = req.body
 
     // receives statistics on averages of words
@@ -516,7 +516,7 @@ router.post('/emotions/statistics', async (req, res, next) => {
     res.send({ statistics: await processAverage(body, averageQuery, query) })
 })
 
-router.post('/top/emotion', async(req, res, next) => {
+router.post('/top/emotion', async function getTopEmotion(req, res, next) {
     let { body } = req.body
 
     // returns the top emotions based on sentiment
@@ -576,7 +576,7 @@ router.post('/top/emotion', async(req, res, next) => {
     res.send({ statistics: await processTop(body, topQuery, query)})
 })
 
-router.post('/poetify', async(req, res, next) => {
+router.post('/poetify', async function poetify(req, res, next) {
     let { body } = req.body
 
     // poetifies word based on sentiment
@@ -619,7 +619,7 @@ router.post('/poetify', async(req, res, next) => {
     res.send({ body: await processLanguage('word', body, languageQuery, query) })
 })
 
-router.get('/data/statistics', async (req, res, next) => {
+router.get('/data/statistics', async function getDBStatistics(req, res, next) {
     // gives statistics on database results
     const query = `
     SELECT sum(W.positive = 1) * 100 / count(*) as pos_percent, sum(W.negative = 1) * 100 / count(*) as neg_percent
@@ -637,7 +637,7 @@ router.get('/data/statistics', async (req, res, next) => {
     res.send({ pos_percent: result[0]['pos_percent'], neg_percent: result[0]['neg_percent'] })
 })
 
-router.get('/options', async (req, res, next) => {
+router.get('/options', async function getOptions(req, res, next) {
     // GET request for list of sentiments and emotions
     const sentiments = [
         'positive',
@@ -656,7 +656,7 @@ router.get('/options', async (req, res, next) => {
     res.send({ emotions, sentiments })
 })
 
-router.get('/languages', async (req, res, next) => {
+router.get('/languages', async function getLanguages(req, res, next) {
     // GET request for list of languages
     const languages = [
         "English", "Afrikaans","Albanian","Amharic","Arabic","Armenian","Azeerbaijani","Basque","Belarusian",
