@@ -9,7 +9,7 @@ This project will translate the user's text in the following ways:
 - poetify: converts text in a way to capture the feeling of a sentence with no concern for meaning 😇
   - replaces every word with another word of the same sentiment and emotion
 
-We will also display statistics regarding how positive and negative the OG text is.
+We will also display statistics regarding how positive and negative the database is and the percentage of each emotion in the translated text.
 
 ### Developers
 Jason Yan, Justin Zhang, Sara Xin, Hetvi Shah
