@@ -4,6 +4,7 @@ const mysql = require('mysql');
 
 const router = express.Router()
 
+// connection to database
 const connection = mysql.createConnection({
     host: config.rds_host,
     user: config.rds_user,
@@ -13,11 +14,20 @@ const connection = mysql.createConnection({
 });
 connection.connect();
 
+////////////////////////////////////////////////
+//           START QUERY FUNCTIONS            //
+////////////////////////////////////////////////
+
+/*
+Function that calls a query on a given word
+and randomly selects a result from the query
+*/
 const queryFunc = async (query, word) => {
     let p = new Promise(function (res, rej) {
         connection.query(query(word), function (err, results) {
             if (err) rej(err)
             else {
+                // get random item in result array
                 const randomNumber = Math.floor(Math.random() * results.length)
                 if (results[randomNumber] === undefined) {
                     res(word)
@@ -30,6 +40,11 @@ const queryFunc = async (query, word) => {
     return p
 }
 
+/*
+Function that calls a language query on
+a given word and returns corresponding 
+one-to-one result
+*/
 const languageQuery = async (language, query, word) => {
     let p = new Promise(function (res, rej) {
         connection.query(query(word), function (err, results) {
@@ -38,6 +53,7 @@ const languageQuery = async (language, query, word) => {
                 if (results.length === 0 || results[0][language] === undefined) {
                     res(word)
                 } else {
+                    // handle case for no translation
                     if (results[0][language] === 'NO TRANSLATION') {
                         res(word)
                     } else {
@@ -50,6 +66,44 @@ const languageQuery = async (language, query, word) => {
     return p
 }
 
+/*
+Function that calls a average query on
+a given word and returns corresponding 
+average sentiment
+*/
+const averageQuery = async (query, word) => {
+    let p = new Promise((res, rej) => {
+        connection.query(query(word), (err, results) => {
+            if (err) rej(err)
+            else {
+                res(results[0])
+            }
+        })
+    })
+    return p
+}
+
+/*
+Function that calls a maximize query on
+a given word and returns corresponding 
+max sentiment
+*/
+const topQuery = async (query, word) => {
+    let p = new Promise((res, rej) => {
+        connection.query(query(word), (err, results) => {
+            if (err) rej(err)
+            else {
+                res(results)
+            }
+        })
+    })
+    return p
+}
+
+/*
+Primary language function to parse body of words
+and iteratively call query function
+*/
 const processLanguage = async (language, body, languageQuery, query) => {
     // initial values 
     let curr_word = ''
@@ -86,6 +140,10 @@ const processLanguage = async (language, body, languageQuery, query) => {
     }
 }
 
+/*
+Primary main function to parse body of words
+and iteratively call query function
+*/
 const processWords = async (body, queryFunc, query) => {
     // initial values 
     let curr_word = ''
@@ -122,30 +180,10 @@ const processWords = async (body, queryFunc, query) => {
     }
 }
 
-const averageQuery = async (query, word) => {
-    let p = new Promise((res, rej) => {
-        connection.query(query(word), (err, results) => {
-            if (err) rej(err)
-            else {
-                res(results[0])
-            }
-        })
-    })
-    return p
-}
-
-const topQuery = async (query, word) => {
-    let p = new Promise((res, rej) => {
-        connection.query(query(word), (err, results) => {
-            if (err) rej(err)
-            else {
-                res(results)
-            }
-        })
-    })
-    return p
-}
-
+/*
+Primary max function to parse body of words
+and iteratively call query function
+*/
 const processTop = async(body, topQuery, query) => {
     let quantities = {
         avg_Anger: 0,
@@ -172,7 +210,7 @@ const processTop = async(body, topQuery, query) => {
             // if current word is not empty and current index
             // is not a letter, then update current word
             if (curr_word !== '') {
-                // append modified word to new body
+                // increment each item in quantities
                 const obj = await topQuery(query, curr_word.toLowerCase())
                 obj.forEach(e => quantities[e['col']] += e['value'])
             }
@@ -198,6 +236,7 @@ const processTop = async(body, topQuery, query) => {
         "avg_Trust"
     ]
 
+    // find highest quantity sentiment
     let highestAvg = 'avg_Anger'
     let maxVal = -1
     avgList.forEach(e => {
@@ -218,9 +257,14 @@ const processTop = async(body, topQuery, query) => {
         avg_Trust: "Trust"
     }
     
+    // map quantity to readable string
     return stringMap[highestAvg]
 }
 
+/*
+Primary average function to parse body of words
+and iteratively call query function
+*/
 const processAverage = async (body, averageQuery, query) => {
     let averages = {
         avg_Positive: 0,
@@ -252,7 +296,7 @@ const processAverage = async (body, averageQuery, query) => {
             // if current word is not empty and current index
             // is not a letter, then update current word
             if (curr_word !== '') {
-                // append modified word to new body
+                // sums up quantities
                 const result = await averageQuery(query, curr_word.toLowerCase())
                 if (result['avg_Positive'] !== null) {
                     averages['avg_Positive'] += result['avg_Positive'] 
@@ -294,6 +338,7 @@ const processAverage = async (body, averageQuery, query) => {
         }
     } 
 
+    // average quantities and returns
     averages['avg_Positive'] /= total
     averages['avg_Negative'] /= total
     averages['avg_Anger'] /= total
@@ -307,6 +352,11 @@ const processAverage = async (body, averageQuery, query) => {
 
     return averages
 }
+
+////////////////////////////////////////////////
+//            END QUERY FUNCTIONS             //
+//              START API ROUTES              //
+////////////////////////////////////////////////
 
 router.post('/synonyms', async (req, res, next) => {
     let { body, sentiment } = req.body
@@ -340,6 +390,7 @@ router.post('/synonyms', async (req, res, next) => {
     WHERE w.Word = '${word}'
     AND w.${sentiment} = 1;`
 
+    // handle default case or sentiment case
     const query = sentiment === 'default' ? basicQuery : emotionQuery
 
     res.send({ body: await processWords(body, queryFunc, query) })
@@ -383,6 +434,7 @@ router.post('/language/synonyms', async (req, res, next) => {
     JOIN synonyms ON Language.English = synonyms.Word2
     `
 
+    // handle default case or sentiment case
     const query = sentiment === 'default' ? basicQuery : emotionQuery
 
     const emotionEnglishQuery = (word) => `
@@ -400,8 +452,10 @@ router.post('/language/synonyms', async (req, res, next) => {
     WHERE w.Word = '${word}'
     AND w.${sentiment} = 1;`
 
+    // handle default case or sentiment case
     const newBody = sentiment === 'default' ? body : await processWords(body, queryFunc, emotionEnglishQuery)
 
+    // runs processLanguage on original body, returns english version of translated body
     res.send({ body: await processLanguage(language, body, languageQuery, query), english: newBody })
 })
 
@@ -431,6 +485,7 @@ router.post('/remove/emotion', async(req, res, next) => {
 router.post('/emotions/statistics', async (req, res, next) => {
     let { body } = req.body
 
+    // receives statistics on averages of words
     const query = (word) => `
     WITH syns AS (
     (SELECT s.Word2
@@ -464,6 +519,7 @@ router.post('/emotions/statistics', async (req, res, next) => {
 router.post('/top/emotion', async(req, res, next) => {
     let { body } = req.body
 
+    // returns the top emotions based on sentiment
     const query = (word) => `
     WITH emotionVals AS (WITH avg_emotions AS (WITH syns AS (SELECT s.Word2
     FROM Words w
@@ -523,6 +579,7 @@ router.post('/top/emotion', async(req, res, next) => {
 router.post('/poetify', async(req, res, next) => {
     let { body } = req.body
 
+    // poetifies word based on sentiment
     const query = (word) => `
     WITH poetically_similar AS (
         WITH sentiment AS (
@@ -563,6 +620,7 @@ router.post('/poetify', async(req, res, next) => {
 })
 
 router.get('/data/statistics', async (req, res, next) => {
+    // gives statistics on database results
     const query = `
     SELECT sum(W.positive = 1) * 100 / count(*) as pos_percent, sum(W.negative = 1) * 100 / count(*) as neg_percent
     FROM Words W
@@ -580,6 +638,7 @@ router.get('/data/statistics', async (req, res, next) => {
 })
 
 router.get('/options', async (req, res, next) => {
+    // GET request for list of sentiments and emotions
     const sentiments = [
         'positive',
         'negative'
@@ -598,6 +657,7 @@ router.get('/options', async (req, res, next) => {
 })
 
 router.get('/languages', async (req, res, next) => {
+    // GET request for list of languages
     const languages = [
         "English", "Afrikaans","Albanian","Amharic","Arabic","Armenian","Azeerbaijani","Basque","Belarusian",
         "Bengali","Bosnian", "Bulgarian","Catalan","Cebuano","Chinese","Corsican","Croatian","Czech",

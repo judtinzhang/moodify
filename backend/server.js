@@ -11,8 +11,10 @@ app.use(cors({ credentials: true, origin: ['http://localhost:1234'] }));
 
 app.use(express.json())
 
+// router for all api calls to backend
 app.use('/api', apiRouter)
 
+// redirect to frontend if non api route
 app.get('*', (req, res) => {
     res.sendFile('index.html', { root: './dist' })
 })
