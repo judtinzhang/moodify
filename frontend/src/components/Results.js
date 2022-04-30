@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Results.css';
 import Select from 'react-select';
 import { getOptions } from '../fetcher';
-import { getSynonyms, removeEmotion, getStatistics, getLanguages, postLanguages, poetify, getDBStatistics, getTopEmotion } from '../fetcher';
+import { getSynonyms, removeEmotion, getStatistics, getLanguages, postLanguages, poetify, getDBStatistics, getTopEmotion, getBodyExists } from '../fetcher';
 import Chart from './Chart';
 
 const Results = (props) => {
@@ -17,7 +17,8 @@ const Results = (props) => {
     const [statBool, setStatBool] = useState(false);
     const [englishText, setEnglishText] = useState(text);
     const [dbStatistics, setDbStatistics] = useState(null);
-    const [topEmotion, setTopEmotion] = useState(null)
+    const [topEmotion, setTopEmotion] = useState(null);
+    const [existsPercentage, setExistsPercentage] = useState(null);
 
     useEffect(() => {
         getOptions().then(res => {
@@ -69,6 +70,11 @@ const Results = (props) => {
         getTopEmotion(englishText).then(res => {
             setTopEmotion(res.statistics)
         })
+
+        getBodyExists(englishText).then(res => {
+            setExistsPercentage(res.body)
+        })
+        
     }, []);
 
     function handleSubmit(e, curr_arr) {
@@ -96,6 +102,9 @@ const Results = (props) => {
                     getTopEmotion(res.body).then(res => {
                         setTopEmotion(res.statistics)
                     })
+                    getBodyExists(res.body).then(res => {
+                        setExistsPercentage(res.body)
+                    })
                 })
             }
         } else {
@@ -108,6 +117,10 @@ const Results = (props) => {
 
                 getTopEmotion(res.body).then(res => {
                     setTopEmotion(res.statistics)
+                })
+
+                getBodyExists(res.body).then(res => {
+                    setExistsPercentage(res.body)
                 })
 
                 getStatistics(res.body).then(res => {
@@ -144,6 +157,9 @@ const Results = (props) => {
         getTopEmotion(englishText).then(res => {
             setTopEmotion(res.statistics)
         })
+        getBodyExists(englishText).then(res => {
+            setExistsPercentage(res.body)
+        })
     }
 
     function handleSubmitL(e) {
@@ -157,18 +173,6 @@ const Results = (props) => {
             setEnglishText(res.english)
             setText(res.body)
         })
-
-        // if (selectedOption.length == 0) {
-        //     postLanguages (englishText, langauge, 'default').then(res => {
-        //         setEnglishText(res.english)
-        //         setText(res.body)
-        //     })
-        // } else {
-            // postLanguages (englishText, langauge, selectedOption[selectedOption.length - 1].value).then(res => {
-            //     setEnglishText(res.english)
-            //     setText(res.body)
-            // })
-        // }
     }
 
     function handlePoetify() {
@@ -183,9 +187,35 @@ const Results = (props) => {
                 setText(res.body)
             }
         })
+        getTopEmotion(englishText).then(res => {
+            setTopEmotion(res.statistics)
+        })
+        getBodyExists(englishText).then(res => {
+            setExistsPercentage(res.body)
+        })
+
+        getStatistics(englishText).then(res => {
+            const res_stats = res.statistics;
+            if (res_stats.avg_Anger == null) {
+                setStatBool(false)
+            } else {
+                const stats = [
+                    { label: "Anger", y: res_stats.avg_Anger },
+                    { label: "Anticipation", y: res_stats.avg_Anticipation },
+                    { label: "Disgust", y: res_stats.avg_Disgust },
+                    { label: "Fear", y: res_stats.avg_Fear },
+                    { label: "Joy", y: res_stats.avg_Joy },
+                    { label: "Sadness", y: res_stats.avg_Sadness },
+                    { label: "Surprise", y: res_stats.avg_Surprise },
+                    { label: "Trust", y: res_stats.avg_Trust },
+                    { label: "Positive", y: res_stats.avg_Positive },
+                    { label: "Negative", y: res_stats.avg_Negative },
+                ]
+                setStatistics(stats)
+                setStatBool(true)
+            }
+        })
     }
-
-
 
     return (
         <div id='results-body'>
@@ -241,7 +271,11 @@ const Results = (props) => {
                         The most impactful emotion was {topEmotion}.
                     </div>
                 )}
-
+                {existsPercentage != null && (
+                    <div style={{ textAlign: 'center'}}>
+                        {Math.round(existsPercentage)}% of the current words exist in our database.
+                    </div>
+                )}
                 {dbStatistics != null && (
                     <div style={{ textAlign: 'center', paddingBottom: '3rem' }}>
                         The database is {dbStatistics.pos_percent}% positive and {dbStatistics.neg_percent}% negative.

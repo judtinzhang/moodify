@@ -106,6 +106,18 @@ const getTopEmotion = async (data) => {
     return resp
 }
 
+const getBodyExists = async (data) => {
+    const res = await fetch(`http://${config.server_host}:${config.server_port}/api/data/existence`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ body: data })
+    })
+    const resp = await res.json()
+    return resp
+}
 
 export {
     getMessage,
@@ -117,38 +129,6 @@ export {
     postLanguages,
     poetify,
     getDBStatistics,
-    getTopEmotion
+    getTopEmotion,
+    getBodyExists
 }
-
-/*
-synonyms
-{
-    "body": "hetvi suks",
-    "synonym": false,
-    "sentiment": "hello"
-}
-
-emotions
-{
-    "body": "hetvi suks",
-    "positive": false
-}
-
-language
-{
-    "body": "hetvi suks",
-    "language": "english"
-}
-
-sentiment
-{
-    "body": "hetvi suks",
-    "sentiment": false
-}
-
-emotion
-{
-    "body": "hetvi suks",
-    "emotion": false
-}
-*/
