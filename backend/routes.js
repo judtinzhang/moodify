@@ -180,6 +180,45 @@ const processWords = async (body, queryFunc, query) => {
     }
 }
 
+const processData = async (body, queryFunc, query) => {
+    // initial values 
+    let curr_word = ''
+    let started = false
+
+    let total = 0
+    let counter = 0
+
+    for (let i = 0; i < body.length; i++) {
+        if ((/[a-zA-Z]/).test(body[i])) {
+            if (!started) {
+                started = true
+            }
+            // if letter, append to current word
+            curr_word += body[i]
+        } else {
+            // if current word is not empty and current index
+            // is not a letter, then update current word
+            if (curr_word !== '') {
+                // append modified word to new body
+                const holder = await queryFunc(query, curr_word.toLowerCase())
+                counter += holder['exist']
+                total += 1
+                started = false
+            }
+            // reset word
+            curr_word = ''
+        }
+    }
+
+    // account for case where no punctuation at the end
+    if ((/[a-zA-Z]/).test(body[body.length - 1])) {
+        const holder = await queryFunc(query, curr_word.toLowerCase())
+        counter += holder['exist']
+        total += 1
+    }
+    return (counter * 100) / total
+}
+
 /*
 Primary max function to parse body of words
 and iteratively call query function
@@ -363,6 +402,7 @@ router.post('/synonyms', async function getSynonyms(req, res, next) {
 
     // returns synonym word correlated to sentiment
     // defaults to basicQuery is 'default' sentiment is given
+    // QUERY #1
     const basicQuery = (word) => `
     (SELECT s.Word2 FROM Words w
     JOIN Synonyms s
@@ -375,6 +415,7 @@ router.post('/synonyms', async function getSynonyms(req, res, next) {
     ON w.Word = s.Word2
     WHERE w.Word = '${word}';`
 
+    // QUERY #2
     const emotionQuery = (word) => `
     (SELECT s.Word2
     FROM Words w
@@ -402,6 +443,7 @@ router.post('/language/synonyms', async function postLanguages(req, res, next) {
     // returns synonym word in different language
     // correlated to sentiment
     // defaults to basicQuery is 'default' sentiment is given 
+    // QUERY #3
     const basicQuery = (word) => `
     WITH query_word AS (
         SELECT Word
@@ -413,6 +455,7 @@ router.post('/language/synonyms', async function postLanguages(req, res, next) {
     JOIN query_word qw on qw.Word = Language.English    
     `
 
+    // QUERY #4
     const emotionQuery = (word) => `
     WITH synonyms AS  (
         (SELECT s.Word2
@@ -463,6 +506,7 @@ router.post('/remove/emotion', async function removeEmotion(req, res, next) {
     let { body, emotion } = req.body
 
     // returns body that disembodies emotion2
+    // QUERY #5
     const query = (word) => `
     (SELECT s.Word2
     FROM Words w
@@ -486,6 +530,7 @@ router.post('/emotions/statistics', async function getStatistics(req, res, next)
     let { body } = req.body
 
     // receives statistics on averages of words
+    // QUERY #6
     const query = (word) => `
     WITH syns AS (
     (SELECT s.Word2
@@ -520,6 +565,7 @@ router.post('/top/emotion', async function getTopEmotion(req, res, next) {
     let { body } = req.body
 
     // returns the top emotions based on sentiment
+    // QUERY #7
     const query = (word) => `
     WITH emotionVals AS (WITH avg_emotions AS (WITH syns AS (SELECT s.Word2
     FROM Words w
@@ -580,6 +626,7 @@ router.post('/poetify', async function poetify(req, res, next) {
     let { body } = req.body
 
     // poetifies word based on sentiment
+    // QUERY #8
     const query = (word) => `
     WITH poetically_similar AS (
         WITH sentiment AS (
@@ -619,8 +666,24 @@ router.post('/poetify', async function poetify(req, res, next) {
     res.send({ body: await processLanguage('word', body, languageQuery, query) })
 })
 
+router.post('/data/existence', async function dataExistence(req, res, next) {
+    let { body } = req.body
+
+    // checks to see if word exists in database, returns 1 if so, false otherwise
+    // QUERY #9
+    const query = (word) => `
+    SELECT IF( EXISTS(
+        SELECT *
+        FROM Words
+        WHERE Words.word = '${word}'), 1, 0) AS exist;
+    `
+
+    res.send({ body: await processData(body, averageQuery, query) })
+})
+
 router.get('/data/statistics', async function getDBStatistics(req, res, next) {
     // gives statistics on database results
+    // QUERY #10
     const query = `
     SELECT sum(W.positive = 1) * 100 / count(*) as pos_percent, sum(W.negative = 1) * 100 / count(*) as neg_percent
     FROM Words W
