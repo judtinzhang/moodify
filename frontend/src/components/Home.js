@@ -17,7 +17,7 @@ const Home = () => {
     return (
         <div id='body'>
             <section>
-                <h1>MOO-dify</h1>
+                <h1>moodify</h1>
                 <textarea id="input-field" placeholder={text} onChange={event => setText(event.target.value)}></textarea>
                 <input className="submit-button" type="button" value="COWculate" onClick={() => handleSubmit()} />
             </section>

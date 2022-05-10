@@ -37707,7 +37707,7 @@ const Home = () => {
 
   return /*#__PURE__*/_react.default.createElement("div", {
     id: "body"
-  }, /*#__PURE__*/_react.default.createElement("section", null, /*#__PURE__*/_react.default.createElement("h1", null, "MOO-dify"), /*#__PURE__*/_react.default.createElement("textarea", {
+  }, /*#__PURE__*/_react.default.createElement("section", null, /*#__PURE__*/_react.default.createElement("h1", null, "moodify"), /*#__PURE__*/_react.default.createElement("textarea", {
     id: "input-field",
     placeholder: text,
     onChange: event => setText(event.target.value)
