@@ -255,13 +255,17 @@ const Results = (props) => {
                     />
                 </div>
 
-                <div style={{textAlign: 'center', margin: '4rem 0', fontStyle: 'italic'}}>
+                <div style={{textAlign: 'center', margin: '2rem 0', fontStyle: 'italic'}}>
                     {text}
+                </div>
+
+                <div style={{textAlign: 'center', margin: '2rem 0'}}>
+                    <a href={"/"}>back</a>
                 </div>
 
                 {statBool && 
                     (<div>
-                        <hr style={{ marginBottom: '4rem' }}/>
+                        <hr style={{ marginBottom: '2rem' }}/>
                         <Chart props={statistics} />
                     </div>)
                 }
