@@ -28,4 +28,6 @@ Within the `frontend` directory, we have a React-based app. The majority of our 
 
 Within the `backend` directory, we have an Express/Node.js based app. We have two files, `server.js`, which enables `express`, several middlewares, and routers. The primary code rests in `routes.js`, which connects the backend to the database as well as sends queries to the database.  The backend contains several API routes, as well as modular, reusable functions to interact with the database on a word-to-word basis. The configurations for our database are in the `backend/config.json` file.
 
+Our wrangling file, to clean the data, is located in the root directory as a .ipynb file.
+
 Lastly, the configurations to install the necessary packages are listed in `package.json`. Run `npm install` to download all the dependencies.
