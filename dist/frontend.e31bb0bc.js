@@ -57769,7 +57769,8 @@ const Results = props => {
   const [englishText, setEnglishText] = (0, _react.useState)(text);
   const [dbStatistics, setDbStatistics] = (0, _react.useState)(null);
   const [topEmotion, setTopEmotion] = (0, _react.useState)(null);
-  const [existsPercentage, setExistsPercentage] = (0, _react.useState)(null);
+  const [existsPercentage, setExistsPercentage] = (0, _react.useState)(null); // Gets all the original data from the fetcher for the first rendering of results page
+
   (0, _react.useEffect)(() => {
     (0, _fetcher.getOptions)().then(res => {
       const tempArrSentiments = res.sentiments.map(sentiment => {
@@ -57847,7 +57848,7 @@ const Results = props => {
     (0, _fetcher.getBodyExists)(englishText).then(res => {
       setExistsPercentage(res.body);
     });
-  }, []);
+  }, []); // Handles changes the user makes with sentiment/emotion lists
 
   function handleSubmit(e, curr_arr) {
     const option = e;
@@ -57953,7 +57954,8 @@ const Results = props => {
     (0, _fetcher.getBodyExists)(englishText).then(res => {
       setExistsPercentage(res.body);
     });
-  }
+  } // Handles when selecting a specific language
+
 
   function handleSubmitL(e) {
     const langauge = e.value;
@@ -57966,7 +57968,8 @@ const Results = props => {
       setEnglishText(res.english);
       setText(res.body);
     });
-  }
+  } // Handles the poetify button
+
 
   function handlePoetify() {
     (0, _fetcher.poetify)(englishText).then(res => {
@@ -58034,19 +58037,11 @@ const Results = props => {
   }, /*#__PURE__*/_react.default.createElement("div", {
     id: "section"
   }, /*#__PURE__*/_react.default.createElement("h1", {
-    id: "results-header",
-    style: {
-      textAlign: 'center'
-    }
+    id: "results-header"
   }, "Here's the milk \uD83D\uDC2E"), /*#__PURE__*/_react.default.createElement("div", {
-    style: {
-      display: 'flex',
-      justifyContent: "space-between"
-    }
+    className: "outer-div"
   }, /*#__PURE__*/_react.default.createElement("div", {
-    style: {
-      width: '70%'
-    }
+    className: "inner-div"
   }, /*#__PURE__*/_react.default.createElement(_reactSelect.default, {
     options: [{
       value: 'default',
@@ -58222,7 +58217,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59019" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61586" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

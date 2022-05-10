@@ -20,6 +20,7 @@ const Results = (props) => {
     const [topEmotion, setTopEmotion] = useState(null);
     const [existsPercentage, setExistsPercentage] = useState(null);
 
+    // Gets all the original data from the fetcher for the first rendering of results page
     useEffect(() => {
         getOptions().then(res => {
             const tempArrSentiments = res.sentiments.map((sentiment) => {
@@ -37,6 +38,7 @@ const Results = (props) => {
             if (res_stats.avg_Anger == null) {
                 setStatBool(false)
             } else {
+
                 const stats = [
                     { label: "Anger", y: res_stats.avg_Anger },
                     { label: "Anticipation", y: res_stats.avg_Anticipation },
@@ -49,6 +51,7 @@ const Results = (props) => {
                     { label: "Positive", y: res_stats.avg_Positive },
                     { label: "Negative", y: res_stats.avg_Negative },
                 ]
+
                 setStatistics(stats)
                 setStatBool(true)
             }
@@ -77,6 +80,7 @@ const Results = (props) => {
         
     }, []);
 
+    // Handles changes the user makes with sentiment/emotion lists
     function handleSubmit(e, curr_arr) {
         const option = e;
 
@@ -140,6 +144,7 @@ const Results = (props) => {
                             { label: "Positive", y: res_stats.avg_Positive },
                             { label: "Negative", y: res_stats.avg_Negative },
                         ]
+
                         setStatistics(stats)
                         setStatBool(true)
                     }
@@ -162,6 +167,7 @@ const Results = (props) => {
         })
     }
 
+    // Handles when selecting a specific language
     function handleSubmitL(e) {
         const langauge = e.value
 
@@ -175,6 +181,7 @@ const Results = (props) => {
         })
     }
 
+    // Handles the poetify button
     function handlePoetify() {
         poetify(englishText).then(res => {
             if (selectedOptionL.value != "English") {
@@ -211,6 +218,7 @@ const Results = (props) => {
                     { label: "Positive", y: res_stats.avg_Positive },
                     { label: "Negative", y: res_stats.avg_Negative },
                 ]
+
                 setStatistics(stats)
                 setStatBool(true)
             }
@@ -220,10 +228,10 @@ const Results = (props) => {
     return (
         <div id='results-body'>
             <div id='section'>
-                <h1 id='results-header' style={{textAlign: 'center'}}>Here's the milk 🐮</h1>
+                <h1 id='results-header'>Here's the milk 🐮</h1>
             
-                <div style={{ display: 'flex', justifyContent: "space-between" }}>
-                    <div style={{width: '70%'}}>
+                <div className="outer-div">
+                    <div className="inner-div">
                         <Select
                             options={[
                                 { value: 'default', label: 'default' },
