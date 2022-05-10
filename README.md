@@ -1,5 +1,14 @@
 # moo-dify
 
+Instructions to build project locally:
+ - Clone repository: https://github.com/judtinzhang/moodify 
+ - `cd` into repository
+ - Run `npm install` to install dependencies
+ - Run `npm run dev` to run both the frontend and backend
+ - Navigate to http://localhost:1234/ to begin!
+* Note the code used for cleaning/wrangling is in `wrangling.ipynb` and the list of dependencies is in `package.json`.
+
+
 This project will translate the user's text in the following ways:
 - emotions: converts text to embody specifed emotion
   - anticipation, disgust, fear, joy, sadness, surprise, trust
