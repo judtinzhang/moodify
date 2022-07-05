@@ -1,5 +1,5 @@
 {
-    "rds_host": "moodifydb.caokyrf1bxav.us-east-1.rds.amazonaws.com",
+    "rds_host": "moodifydb",
     "rds_port": "3306",
     "rds_user": "moo1234",
     "rds_password": "Moo!Moo!Moo!",
