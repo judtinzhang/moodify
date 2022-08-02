@@ -1,9 +1,9 @@
 {
-    "rds_host": "moodifydb",
+    "rds_host": "ENTER RDS HOST HERE",
     "rds_port": "3306",
-    "rds_user": "moo1234",
-    "rds_password": "Moo!Moo!Moo!",
-    "rds_db": "MOODIFY",
+    "rds_user": "ENTER RDS USERNAME HERE",
+    "rds_password": "ENTER RDS PASSWORD HERE",
+    "rds_db": "ENTER RDS DB NAME HERE",
     "server_host": "127.0.0.1",
     "server_port": "8080"
 }
